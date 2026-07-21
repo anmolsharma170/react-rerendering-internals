@@ -1,28 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useState,memo, useCallback, useMemo } from 'react'
 import './App.css'
 import SlowComponent from './SlowComponent'
 import Modal from './Modal'
-import ButtonWithModal from './ButtonWithModal'
-import RefactorComponent from './RefactorComponent'
+// const MemoizedSlowComponent = memo(SlowComponent);
+
+const MemoizedSlowComponent = memo(function ModifiedSlowComponent({time}){
+  return <SlowComponent time={time}/>
+})
+
 function App() {
+  const [isOpen,setIsOpen] = useState(false);
+  const someFunction = useCallback(()=>{},[]);
+  const timeArray = useMemo(()=>{
+    return [1000];
+  },[]);
   return (
     <>
-    <RefactorComponent>
-      <>
+    <button onClick={()=>setIsOpen(true)}>Open Modal</button>
+    {isOpen && <Modal close={()=>setIsOpen(false)}  /> }
       <div>
       Something done here
       </div>
-      <ButtonWithModal/>
       <div>
         Something done here
       </div>
-      <SlowComponent/>
+      <MemoizedSlowComponent time={1000} custom={someFunction}/>
       </>
-    </RefactorComponent>
-    </>
   )
 }
 
